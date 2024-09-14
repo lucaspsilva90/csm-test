@@ -1,16 +1,15 @@
-import { UserSession } from 'src/domain/entities/UserSession';
-import { StreamLimit } from '../../src/domain/entities/value-objects/stream-limit';
+import { Session } from 'src/domain/entities/Session';
 import { UserSessionRepository } from 'src/domain/repository/user-session-repository';
 
 export class FakeUserSessionRepository implements UserSessionRepository {
 
-    sessions: UserSession[] = [];
+    sessions: Session[] = [];
 
-    async save(userSession: UserSession): Promise<void> {
+    async save(userSession: Session): Promise<void> {
         this.sessions.push(userSession);
     }
 
-    async updateSession(session: UserSession): Promise<void> {
+    async updateSession(session: Session): Promise<void> {
         this.sessions.forEach(s => { 
             if (s.getUserId() === session.getUserId()) {
                 s = session;
@@ -18,7 +17,7 @@ export class FakeUserSessionRepository implements UserSessionRepository {
         });
     }
 
-    async findByUserId(userId: string): Promise<UserSession | null> {
+    async findByUserId(userId: string): Promise<Session | null> {
         const session = this.sessions.find(session => session.getUserId() === userId)
 
         if (!session) {

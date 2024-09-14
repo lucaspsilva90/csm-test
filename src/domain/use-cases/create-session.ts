@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserSession } from '../entities/UserSession';
+import { Session } from '../entities/Session';
 import { StreamLimit } from '../entities/value-objects/stream-limit';
 import { UserAlreadyHasSession } from '../errors/user-already-has-session-error';
 import { UserSessionRepository } from '../repository/user-session-repository';
@@ -25,7 +25,7 @@ export class CreateSessionUseCase {
             throw new UserAlreadyHasSession('User already has a session');
         }
 
-        const userSession = UserSession.create(userId, limit);
+        const userSession = Session.create(userId, limit);
 
         await this.userSessionRepository.save(userSession);
 

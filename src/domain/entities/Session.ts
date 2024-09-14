@@ -1,11 +1,12 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { StreamSession } from './StreamSession';
+import { Stream } from './Stream';
 import { StreamLimit } from './value-objects/stream-limit';
 import { StreamLimitReachedError } from '../errors/stream-limit-reached-error';
 import { Transform } from 'class-transformer';
+import { StreamLimitConflictError } from '../errors/stream-limit-conflict-error';
 
 @Entity()
-export class UserSession {
+export class Session {
 
     @PrimaryGeneratedColumn('uuid')
     readonly userId: string;
@@ -15,16 +16,16 @@ export class UserSession {
 
     private streamLimit: StreamLimit;
 
-    @OneToMany(() => StreamSession, stream => stream.userSession, { cascade: true, eager: true })
-    public activeStreams: StreamSession[]
+    @OneToMany(() => Stream, stream => stream.session, { cascade: true, eager: true })
+    public activeStreams: Stream[]
 
     private constructor(userId: string, streamLimitValue: number) {
         this.userId = userId;
         this.setStreamLimit(streamLimitValue);
     }
 
-    static create(userId: string, streamLimit: number): UserSession {
-        const instance = new UserSession(userId, streamLimit);
+    static create(userId: string, streamLimit: number): Session {
+        const instance = new Session(userId, streamLimit);
         instance.activeStreams = [];
         return instance;
     }
@@ -37,7 +38,7 @@ export class UserSession {
         if (!this.canAddStream()) {
             throw new StreamLimitReachedError();
         }
-        const stream = StreamSession.create();
+        const stream = Stream.create();
         this.activeStreams.push(stream);
     }
 
@@ -49,7 +50,7 @@ export class UserSession {
         const newStreamLimit = new StreamLimit(newLimit);
 
         if (newLimit < this.activeStreams.length) {
-            throw new Error(`New stream limit cannot be less than the number of active streams.`);
+            throw new StreamLimitConflictError();
         }
         this.setStreamLimit(newLimit)
     }
@@ -73,12 +74,12 @@ export class UserSession {
         return this.activeStreams.length;
     }
 
-    public getActiveStreams(): StreamSession[] {
+    public getActiveStreams(): Stream[] {
         return this.activeStreams;
     }
 
-    public toDomain(): UserSession {
-        const session = UserSession.create(this.userId, this.streamLimitValue);
+    public toDomain(): Session {
+        const session = Session.create(this.userId, this.streamLimitValue);
         session.activeStreams = this.activeStreams;
         return session;
     }

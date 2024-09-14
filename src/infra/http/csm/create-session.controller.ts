@@ -18,7 +18,6 @@ export class CreateUseSessionController {
             if (error instanceof UserAlreadyHasSession) {
                 throw new ConflictException(error.message);
             }
-
             throw new InternalServerErrorException({ message: 'Internal server error', error });
         }
     }

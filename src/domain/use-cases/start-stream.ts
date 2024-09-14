@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserSession } from '../entities/UserSession';
+import { Session } from '../entities/Session';
 import { StreamLimitReachedError } from '../errors/stream-limit-reached-error';
 import { UserSessionNotFoundError } from '../errors/user-session-not-found-error';
 import { UserSessionRepository } from '../repository/user-session-repository';
@@ -10,7 +10,7 @@ interface StartStreamUseCaseInput {
 
 interface StartStreamUseCaseOutput {
     message: string;
-    session: UserSession;
+    session: Session;
 }
 
 @Injectable()

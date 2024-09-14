@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserSession } from 'src/domain/entities/UserSession';
+import { Session } from 'src/domain/entities/Session';
 import { UserSessionRepository } from 'src/domain/repository/user-session-repository';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class TypeORMUserSessionRepository implements UserSessionRepository {
     constructor(
-        @InjectRepository(UserSession)
-        private userSessionRepository: Repository<UserSession>
+        @InjectRepository(Session)
+        private userSessionRepository: Repository<Session>
     ) { }
 
-    async save(userSession: UserSession): Promise<void> {
+    async save(userSession: Session): Promise<void> {
         await this.userSessionRepository.save(userSession);
     }
-    async updateSession(session: UserSession): Promise<void> {
+    async updateSession(session: Session): Promise<void> {
         await this.userSessionRepository.save(session);
     }
 
-    async findByUserId(userId: string): Promise<UserSession | null> {
+    async findByUserId(userId: string): Promise<Session | null> {
         const sessionModel = await this.userSessionRepository.findOne({
             where: { userId }, relations: {
                 activeStreams: true

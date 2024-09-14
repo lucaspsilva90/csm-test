@@ -2,13 +2,13 @@ import { Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { TypeORMUserSessionRepository } from './typeorm-user-session.repository';
-import { UserSession } from 'src/domain/entities/UserSession';
-import { StreamSession } from 'src/domain/entities/StreamSession';
+import { Session } from 'src/domain/entities/Session';
+import { Stream } from 'src/domain/entities/Stream';
 import { UserSessionRepository } from 'src/domain/repository/user-session-repository';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([UserSession, StreamSession]),
+        TypeOrmModule.forFeature([Session, Stream]),
         TypeOrmModule.forRootAsync({
             useFactory: () => ({
                 type: 'postgres',
@@ -17,7 +17,7 @@ import { UserSessionRepository } from 'src/domain/repository/user-session-reposi
                 username: 'postgres',
                 password: 'postgres',
                 database: 'mydb',
-                entities: [UserSession, StreamSession],
+                entities: [Session, Stream],
                 synchronize: true,
             }),
             dataSourceFactory: async (options) => {

@@ -1,6 +1,7 @@
 import { UserSessionNotFoundError } from '../errors/user-session-not-found-error';
 import { UserSessionRepository } from '../repository/user-session-repository';
-import { UserSession } from '../entities/UserSession';
+import { Session } from '../entities/Session';
+import { Injectable } from '@nestjs/common';
 
 interface UpdateSessionStreamLimitUseCaseInput {
     userId: string;
@@ -9,9 +10,9 @@ interface UpdateSessionStreamLimitUseCaseInput {
 
 export interface UpdateSessionStreamLimitUseCaseOutput {
     message: string;
-    session: UserSession;
+    session: Session;
 }
-
+@Injectable()
 export class UpdateSessionStreamLimitUseCase {
     constructor(private userSessionRepository: UserSessionRepository) { }
 

@@ -1,4 +1,4 @@
-import { UserSession } from '../entities/UserSession';
+import { Session } from '../entities/Session';
 import { UserSessionNotFoundError } from '../errors/user-session-not-found-error';
 import { UserSessionRepository } from '../repository/user-session-repository';
 
@@ -9,7 +9,7 @@ interface StopStreamUseCaseInput {
 
 interface StopStreamUseCaseOutput {
     message: string;
-    session: UserSession;
+    session: Session;
 }
 
 export class StopStreamUseCase {

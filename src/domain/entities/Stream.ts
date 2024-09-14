@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { UserSession } from './UserSession';
+import { Session } from './Session';
 import { randomUUID, UUID } from 'crypto';
 
 @Entity()
-export class StreamSession {
+export class Stream {
   
   @PrimaryGeneratedColumn('uuid')
   private streamId: string;
@@ -11,8 +11,8 @@ export class StreamSession {
   @Column()
   private startedAt: Date;
 
-  @ManyToOne(() => UserSession, userSession => userSession.activeStreams)
-  public userSession: UserSession;
+  @ManyToOne(() => Session, userSession => userSession.activeStreams)
+  public session: Session;
 
   constructor(id: UUID, startedAt?: Date) {
     this.streamId = id ?? randomUUID(); 
@@ -20,7 +20,7 @@ export class StreamSession {
   }
 
   public static create(id?: UUID, startDate?: Date) {
-    return new StreamSession(id, startDate);
+    return new Stream(id, startDate);
   }
 
   public getStreamId(): string {
@@ -31,11 +31,11 @@ export class StreamSession {
     return this.startedAt;
   }
 
-  public getUserSession(): UserSession {
-    return this.userSession;
+  public getSession(): Session {
+    return this.session;
   }
 
-  public setUserSession(userSession: UserSession): void {
-    this.userSession = userSession;
+  public setUserSession(session: Session): void {
+    this.session = session;
   }
 }

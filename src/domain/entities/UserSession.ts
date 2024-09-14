@@ -15,7 +15,7 @@ export class UserSession {
 
     private streamLimit: StreamLimit;
 
-    @OneToMany(() => StreamSession, stream => stream.userSession)
+    @OneToMany(() => StreamSession, stream => stream.userSession, { cascade: true, eager: true })
     public activeStreams: StreamSession[]
 
     private constructor(userId: string, streamLimitValue: number) {
@@ -34,10 +34,10 @@ export class UserSession {
     }
 
     public startStream(): void {
-        const stream = new StreamSession();
         if (!this.canAddStream()) {
             throw new StreamLimitReachedError();
         }
+        const stream = StreamSession.create();
         this.activeStreams.push(stream);
     }
 
@@ -75,5 +75,11 @@ export class UserSession {
 
     public getActiveStreams(): StreamSession[] {
         return this.activeStreams;
+    }
+
+    public toDomain(): UserSession {
+        const session = UserSession.create(this.userId, this.streamLimitValue);
+        session.activeStreams = this.activeStreams;
+        return session;
     }
 }

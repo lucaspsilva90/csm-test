@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { get } from 'http';
 import { UserSession } from 'src/domain/entities/UserSession';
 import { UserSessionRepository } from 'src/domain/repository/user-session-repository';
 import { Repository } from 'typeorm';
@@ -16,11 +15,19 @@ export class TypeORMUserSessionRepository implements UserSessionRepository {
         await this.userSessionRepository.save(userSession);
     }
     async updateSession(session: UserSession): Promise<void> {
-        await this.userSessionRepository.update(session.userId, session);
+        await this.userSessionRepository.save(session);
     }
 
     async findByUserId(userId: string): Promise<UserSession | null> {
-        return await this.userSessionRepository.findOne({ where: { userId } });
+        const sessionModel = await this.userSessionRepository.findOne({
+            where: { userId }, relations: {
+                activeStreams: true
+            }
+        });
+
+        if (!sessionModel) return null;
+
+        return sessionModel.toDomain();
     }
     deleteByUserId(userId: string): Promise<void> {
         throw new Error('Method not implemented.');

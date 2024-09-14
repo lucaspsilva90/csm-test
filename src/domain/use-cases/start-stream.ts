@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { UserSession } from '../entities/UserSession';
 import { StreamLimitReachedError } from '../errors/stream-limit-reached-error';
 import { UserSessionNotFoundError } from '../errors/user-session-not-found-error';
@@ -12,6 +13,7 @@ interface StartStreamUseCaseOutput {
     session: UserSession;
 }
 
+@Injectable()
 export class StartStreamUseCase {
     constructor(private userSessionRepository: UserSessionRepository) { }
 
@@ -20,13 +22,6 @@ export class StartStreamUseCase {
 
         if (!session) {
             throw new UserSessionNotFoundError({ userId });
-        }
-
-        if (session.getActiveStreamCount() >= session.getStreamLimit().getLimit()) {
-            throw new StreamLimitReachedError({
-                userId: session.getUserId(),
-                streams: session.getActiveStreams()
-            });
         }
 
         session.startStream();

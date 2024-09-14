@@ -1,19 +1,35 @@
-import { UUID, randomUUID } from 'crypto';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { UserSession } from './UserSession';
 
+@Entity()
 export class StreamSession {
-  private streamId: UUID;
+  
+  @PrimaryGeneratedColumn('uuid')
+  private streamId: string;
+
+  @Column()
   private startedAt: Date;
 
-  constructor(streamId?: UUID, startedAt?: Date) { 
-    this.streamId = streamId ?? randomUUID()
+  @ManyToOne(() => UserSession, userSession => userSession.activeStreams)
+  public userSession: UserSession;
+
+  constructor(startedAt?: Date) { 
     this.startedAt = startedAt ?? new Date();
   }
 
-  getStreamId(): string {
+  public getStreamId(): string {
     return this.streamId;
   }
 
-  getStartedAt(): Date {
+  public getStartedAt(): Date {
     return this.startedAt;
+  }
+
+  public getUserSession(): UserSession {
+    return this.userSession;
+  }
+
+  public setUserSession(userSession: UserSession): void {
+    this.userSession = userSession;
   }
 }

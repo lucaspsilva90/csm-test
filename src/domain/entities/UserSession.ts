@@ -1,16 +1,27 @@
-import { StreamLimitReachedError } from '../errors/stream-limit-reached-error';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { StreamSession } from './StreamSession';
 import { StreamLimit } from './value-objects/stream-limit';
+import { StreamLimitReachedError } from '../errors/stream-limit-reached-error';
+import { Transform } from 'class-transformer';
 
-
+@Entity()
 export class UserSession {
-    private userId: string
-    private activeStreams: StreamSession[] = [];
+
+    @PrimaryGeneratedColumn('uuid')
+    readonly userId: string;
+
+    @Column('int')
+    private streamLimitValue: number;
+
     private streamLimit: StreamLimit;
 
-    constructor(userId: string, streamLimit: StreamLimit) {
+    @OneToMany(() => StreamSession, stream => stream.userSession)
+    public activeStreams: StreamSession[]
+
+    constructor(userId: string, streamLimitValue: number) {
         this.userId = userId;
-        this.streamLimit = streamLimit;
+        this.streamLimitValue = streamLimitValue;
+        this.streamLimit = new StreamLimit(streamLimitValue);
     }
 
     private canAddStream(): boolean {
@@ -41,8 +52,10 @@ export class UserSession {
         return this.userId;
     }
 
-    public getStreamLimit(): number {
-        return this.streamLimit.getLimit();
+    @Transform(({ value }) => new StreamLimit(value), { toClassOnly: true })
+    @Transform(({ value }) => value, { toPlainOnly: true })
+    public getStreamLimit(): StreamLimit {
+        return new StreamLimit(this.streamLimitValue);
     }
 
     public getActiveStreamCount(): number {

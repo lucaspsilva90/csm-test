@@ -1,17 +1,17 @@
 import { UserSessionRepository } from 'src/domain/repository/user-session-repository';
-import { CreateUserSessionUseCase } from '../../src/domain/use-cases/create-user-session';
+import { CreateSessionUseCase } from '../../src/domain/use-cases/create-session';
 import { StartStreamUseCase } from '../../src/domain/use-cases/start-stream';
 import { FakeUserSessionRepository } from '../../test/repositories/fakeUserSessionRepository';
 import { StopStreamUseCase } from '../../src/domain/use-cases/stop-stream';
 
 let userSessionRepository: UserSessionRepository;
-let createUserSessionUseCase: CreateUserSessionUseCase;
+let createUserSessionUseCase: CreateSessionUseCase;
 let startStreamUseCase: StartStreamUseCase;
 let stopStreamUseCase: StopStreamUseCase;
 
 beforeEach(() => {
     userSessionRepository = new FakeUserSessionRepository();
-    createUserSessionUseCase = new CreateUserSessionUseCase(userSessionRepository);
+    createUserSessionUseCase = new CreateSessionUseCase(userSessionRepository);
     startStreamUseCase = new StartStreamUseCase(userSessionRepository);
     stopStreamUseCase = new StopStreamUseCase(userSessionRepository);
 });

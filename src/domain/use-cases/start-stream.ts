@@ -22,7 +22,7 @@ export class StartStreamUseCase {
             throw new UserSessionNotFoundError({ userId });
         }
 
-        if (session.getActiveStreamCount() >= session.getStreamLimit()) {
+        if (session.getActiveStreamCount() >= session.getStreamLimit().getLimit()) {
             throw new StreamLimitReachedError({
                 userId: session.getUserId(),
                 streams: session.getActiveStreams()

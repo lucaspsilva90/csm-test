@@ -1,14 +1,14 @@
 import { randomUUID } from 'node:crypto';
 import { UserSessionRepository } from '../../src/domain/repository/user-session-repository';
-import { CreateUserSessionUseCase } from '../../src/domain/use-cases/create-user-session';
+import { CreateSessionUseCase } from '../../src/domain/use-cases/create-session';
 import { FakeUserSessionRepository } from '../repositories/fakeUserSessionRepository';
 
-let createUserSessionUseCase: CreateUserSessionUseCase;
+let createUserSessionUseCase: CreateSessionUseCase;
 let userSessionRepository: UserSessionRepository;
 
 beforeEach(() => {
     userSessionRepository = new FakeUserSessionRepository();
-    createUserSessionUseCase = new CreateUserSessionUseCase(userSessionRepository);
+    createUserSessionUseCase = new CreateSessionUseCase(userSessionRepository);
 });
 
 test('it should create a user session', async () => {

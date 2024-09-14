@@ -18,10 +18,15 @@ export class UserSession {
     @OneToMany(() => StreamSession, stream => stream.userSession)
     public activeStreams: StreamSession[]
 
-    constructor(userId: string, streamLimitValue: number) {
+    private constructor(userId: string, streamLimitValue: number) {
         this.userId = userId;
-        this.streamLimitValue = streamLimitValue;
-        this.streamLimit = new StreamLimit(streamLimitValue);
+        this.setStreamLimit(streamLimitValue);
+    }
+
+    static create(userId: string, streamLimit: number): UserSession {
+        const instance = new UserSession(userId, streamLimit);
+        instance.activeStreams = [];
+        return instance;
     }
 
     private canAddStream(): boolean {
@@ -42,10 +47,16 @@ export class UserSession {
 
     public updateStreamLimit(newLimit: number): void {
         const newStreamLimit = new StreamLimit(newLimit);
+
         if (newLimit < this.activeStreams.length) {
             throw new Error(`New stream limit cannot be less than the number of active streams.`);
         }
-        this.streamLimit = newStreamLimit;
+        this.setStreamLimit(newLimit)
+    }
+
+    private setStreamLimit(limit: number): void {
+        this.streamLimit = new StreamLimit(limit);
+        this.streamLimitValue = limit;
     }
 
     public getUserId(): string {

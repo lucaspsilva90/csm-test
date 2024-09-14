@@ -23,7 +23,7 @@ test('should update the stream limit', async () => {
     const response = await updateSessionStreamLimitUseCase.execute({ userId: uuid, limit: 5 });
 
     expect(response.message).toBe('Success');
-    expect(response.session.getStreamLimit()).toBe(5);
+    expect(response.session.getStreamLimit().getLimit()).toBe(5);
 });
 
 test('should throw an error when the session is not found', async () => {

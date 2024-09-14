@@ -25,7 +25,7 @@ export class CreateSessionUseCase {
             throw new UserAlreadyHasSession('User already has a session');
         }
 
-        const userSession = new UserSession(userId, limit);
+        const userSession = UserSession.create(userId, limit);
 
         await this.userSessionRepository.save(userSession);
 

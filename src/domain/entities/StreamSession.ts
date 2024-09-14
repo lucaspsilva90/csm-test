@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { UserSession } from './UserSession';
+import { randomUUID } from 'crypto';
 
 @Entity()
 export class StreamSession {
@@ -13,7 +14,8 @@ export class StreamSession {
   @ManyToOne(() => UserSession, userSession => userSession.activeStreams)
   public userSession: UserSession;
 
-  constructor(startedAt?: Date) { 
+  constructor(startedAt?: Date) {
+    this.streamId = randomUUID(); 
     this.startedAt = startedAt ?? new Date();
   }
 

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Session } from 'src/domain/entities/Session';
+import { Stream } from 'src/domain/entities/Stream';
+import { UserSessionNotFoundError } from 'src/domain/errors/user-session-not-found-error';
 import { UserSessionRepository } from 'src/domain/repository/user-session-repository';
 import { Repository } from 'typeorm';
 
@@ -8,7 +10,9 @@ import { Repository } from 'typeorm';
 export class TypeORMUserSessionRepository implements UserSessionRepository {
     constructor(
         @InjectRepository(Session)
-        private userSessionRepository: Repository<Session>
+        private userSessionRepository: Repository<Session>,
+        @InjectRepository(Stream)
+        private streamRepository: Repository<Stream>,
     ) { }
 
     async save(userSession: Session): Promise<void> {
@@ -29,7 +33,13 @@ export class TypeORMUserSessionRepository implements UserSessionRepository {
 
         return sessionModel.toDomain();
     }
-    deleteByUserId(userId: string): Promise<void> {
-        throw new Error('Method not implemented.');
+    async deleteByUserId(session, streamId: string): Promise<void> {
+        const streamSession = await this.userSessionRepository.findOne({ where: { userId: session.getUserId() } });
+
+        if (!streamSession) {
+            throw new UserSessionNotFoundError(session.getUserId());
+        }
+        
+        await this.streamRepository.delete(streamId);
     }
 }

@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { Session } from '../entities/Session';
 import { UserSessionNotFoundError } from '../errors/user-session-not-found-error';
 import { UserSessionRepository } from '../repository/user-session-repository';
@@ -11,7 +12,7 @@ interface StopStreamUseCaseOutput {
     message: string;
     session: Session;
 }
-
+@Injectable()
 export class StopStreamUseCase {
     constructor(private userSessionRepository: UserSessionRepository) {}
 
@@ -24,7 +25,9 @@ export class StopStreamUseCase {
 
         session.removeStream(streamId);
 
-        await this.userSessionRepository.updateSession(session);
+        console.log('session', session);
+
+        await this.userSessionRepository.deleteByUserId(session, streamId);
 
         return {
             message: 'Success',

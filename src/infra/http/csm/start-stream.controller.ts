@@ -8,7 +8,7 @@ import { StartStreamDTO, StartStreamResponseDTO } from 'src/infra/dto/start-stre
 export class StartStreamController {
     constructor(private startStreamUseCase: StartStreamUseCase) { }
 
-    @Post('/stream')
+    @Post('/stream/start')
     async handle(@Body(new ValidationPipe()) { userId }: StartStreamDTO): Promise<StartStreamResponseDTO> {
         try {
             const { message } = await this.startStreamUseCase.execute({ userId });

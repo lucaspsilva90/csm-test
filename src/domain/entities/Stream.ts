@@ -4,7 +4,7 @@ import { randomUUID, UUID } from 'crypto';
 
 @Entity()
 export class Stream {
-  
+
   @PrimaryGeneratedColumn('uuid')
   private streamId: string;
 
@@ -15,7 +15,7 @@ export class Stream {
   public session: Session;
 
   constructor(id: UUID, startedAt?: Date) {
-    this.streamId = id ?? randomUUID(); 
+    this.streamId = id ?? randomUUID();
     this.startedAt = startedAt ?? new Date();
   }
 

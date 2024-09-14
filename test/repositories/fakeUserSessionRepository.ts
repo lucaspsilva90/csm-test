@@ -26,8 +26,8 @@ export class FakeUserSessionRepository implements UserSessionRepository {
 
         return session;
     }
-    deleteByUserId(userId: string): Promise<void> {
-        throw new Error('Method not implemented.');
+    async deleteByUserId(session: Session): Promise<void> {
+        this.sessions = this.sessions.filter(s => s.getUserId() !== session.getUserId());
     }
 
 }

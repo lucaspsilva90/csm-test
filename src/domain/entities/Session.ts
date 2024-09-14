@@ -16,7 +16,7 @@ export class Session {
 
     private streamLimit: StreamLimit;
 
-    @OneToMany(() => Stream, stream => stream.session, { cascade: true, eager: true })
+    @OneToMany(() => Stream, stream => stream.session, { cascade: true, eager: true, onDelete: 'CASCADE' })
     public activeStreams: Stream[]
 
     private constructor(userId: string, streamLimitValue: number) {

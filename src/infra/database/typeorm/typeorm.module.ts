@@ -47,6 +47,7 @@ export class TypeORMDatabaseModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async onModuleDestroy() {
+        console.log('disconectado');
         if (this.dataSource.isInitialized) {
             await this.dataSource.destroy();
         }

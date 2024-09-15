@@ -6,7 +6,7 @@ import { randomUUID, UUID } from 'crypto';
 export class Stream {
 
   @PrimaryGeneratedColumn('uuid')
-  private streamId: string;
+  readonly streamId: string;
 
   @Column()
   private startedAt: Date;
@@ -29,13 +29,5 @@ export class Stream {
 
   public getStartedAt(): Date {
     return this.startedAt;
-  }
-
-  public getSession(): Session {
-    return this.session;
-  }
-
-  public setUserSession(session: Session): void {
-    this.session = session;
   }
 }

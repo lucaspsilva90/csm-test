@@ -1,4 +1,5 @@
 import { Body, ConflictException, Controller, InternalServerErrorException, Post, ValidationPipe } from '@nestjs/common';
+import { ResourceLocked } from 'src/domain/errors/resource-locked-error';
 import { UserAlreadyHasSession } from 'src/domain/errors/user-already-has-session-error';
 import { CreateSessionUseCase } from 'src/domain/use-cases/create-session';
 import { CreateSessionDTO } from 'src/infra/dto/create-session.dto';
@@ -17,6 +18,9 @@ export class CreateUseSessionController {
         } catch (error) {
             if (error instanceof UserAlreadyHasSession) {
                 throw new ConflictException(error.message);
+            }
+            if (error instanceof ResourceLocked) {
+                throw new ConflictException({ message: error.message, additionalData: error.additionalData });
             }
             throw new InternalServerErrorException({ message: 'Internal server error', error });
         }

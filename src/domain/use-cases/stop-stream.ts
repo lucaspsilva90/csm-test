@@ -25,8 +25,6 @@ export class StopStreamUseCase {
 
         session.removeStream(streamId);
 
-        console.log('session', session);
-
         await this.userSessionRepository.deleteByUserId(session, streamId);
 
         return {

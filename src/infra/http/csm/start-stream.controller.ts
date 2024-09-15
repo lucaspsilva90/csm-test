@@ -1,4 +1,5 @@
 import { Body, ConflictException, Controller, InternalServerErrorException, NotFoundException, Post, ValidationPipe } from '@nestjs/common';
+import { ResourceLocked } from 'src/domain/errors/resource-locked-error';
 import { StreamLimitReachedError } from 'src/domain/errors/stream-limit-reached-error';
 import { UserSessionNotFoundError } from 'src/domain/errors/user-session-not-found-error';
 import { StartStreamUseCase } from 'src/domain/use-cases/start-stream';
@@ -22,6 +23,9 @@ export class StartStreamController {
             }
             if (error instanceof StreamLimitReachedError) {
                 throw new ConflictException({ message: error.message });
+            }
+            if(error instanceof ResourceLocked) {
+                throw new ConflictException({ message: error.message, additionalData: error.additionalData });
             }
             throw new InternalServerErrorException({ message: error.message, errorStack: error.stack });
         }

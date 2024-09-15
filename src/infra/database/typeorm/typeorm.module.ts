@@ -4,11 +4,14 @@ import { DataSource } from 'typeorm';
 import { TypeORMUserSessionRepository } from './typeorm-user-session.repository';
 import { Session } from 'src/domain/entities/Session';
 import { Stream } from 'src/domain/entities/Stream';
+import { Lock } from 'src/domain/entities/Lock';
 import { UserSessionRepository } from 'src/domain/repository/user-session-repository';
+import { LockRepository } from 'src/domain/repository/lock-repository';
+import { TypeORMLockRepository } from './typeorm-lock-repository';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Session, Stream]),
+        TypeOrmModule.forFeature([Session, Stream, Lock]),
         TypeOrmModule.forRootAsync({
             useFactory: () => ({
                 type: 'postgres',
@@ -17,7 +20,7 @@ import { UserSessionRepository } from 'src/domain/repository/user-session-reposi
                 username: 'postgres',
                 password: 'postgres',
                 database: 'mydb',
-                entities: [Session, Stream],
+                entities: [Session, Stream, Lock],
                 synchronize: true,
             }),
             dataSourceFactory: async (options) => {
@@ -28,6 +31,10 @@ import { UserSessionRepository } from 'src/domain/repository/user-session-reposi
         }),
     ],
     providers: [
+        {
+           provide: LockRepository,
+           useClass: TypeORMLockRepository 
+        },
         {
             provide: UserSessionRepository,
             useClass: TypeORMUserSessionRepository
@@ -47,7 +54,6 @@ export class TypeORMDatabaseModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async onModuleDestroy() {
-        console.log('disconectado');
         if (this.dataSource.isInitialized) {
             await this.dataSource.destroy();
         }

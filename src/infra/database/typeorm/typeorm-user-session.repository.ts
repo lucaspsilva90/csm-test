@@ -72,6 +72,7 @@ export class TypeORMUserSessionRepository implements UserSessionRepository {
 
         return sessionModel.toDomain();
     }
+    
     async deleteByUserId(session: Session, streamId: string): Promise<void> {
 
         const streamSession = await this.userSessionRepository.findOne({ where: { userId: session.getUserId() } });

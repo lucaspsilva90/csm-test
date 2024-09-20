@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Session } from '../entities/Session';
-import { StreamLimit } from '../entities/value-objects/stream-limit';
 import { UserAlreadyHasSession } from '../errors/user-already-has-session-error';
 import { UserSessionRepository } from '../repository/user-session-repository';
 

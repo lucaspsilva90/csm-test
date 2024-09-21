@@ -9,6 +9,8 @@ export class Lock {
     @CreateDateColumn()
     private lockedAt: Date;
 
+    private lockExpirationTimeInSeconds: number = 30;
+
     private constructor(resourceId: string) {
         this.setLockResourceId(resourceId);
         this.lockedAt = this.createdLockedAt();
@@ -34,6 +36,10 @@ export class Lock {
 
     getLockedAt(): Date {
         return this.lockedAt;
+    }
+
+    getLockDuration(): number {
+        return this.lockExpirationTimeInSeconds
     }
 
 }

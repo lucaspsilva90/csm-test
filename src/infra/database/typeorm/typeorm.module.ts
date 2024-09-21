@@ -7,7 +7,8 @@ import { Stream } from 'src/domain/entities/Stream';
 import { Lock } from 'src/domain/entities/Lock';
 import { UserSessionRepository } from 'src/domain/repository/user-session-repository';
 import { LockRepository } from 'src/domain/repository/lock-repository';
-import { TypeORMLockRepository } from './typeorm-lock-repository';
+import { RedisLockRepository } from '../redis/redis-lock-repository';
+import { RedisService } from '../redis/redis-service';
 
 @Module({
     imports: [
@@ -31,9 +32,10 @@ import { TypeORMLockRepository } from './typeorm-lock-repository';
         }),
     ],
     providers: [
+        RedisService,
         {
            provide: LockRepository,
-           useClass: TypeORMLockRepository 
+           useClass: RedisLockRepository 
         },
         {
             provide: UserSessionRepository,

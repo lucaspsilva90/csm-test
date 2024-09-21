@@ -4,8 +4,10 @@ import { FastifyAdapter } from '@nestjs/platform-fastify';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, new FastifyAdapter({
-    logger: true,
-  }));
+    logger: false,
+  }), {
+    logger: false
+  });
   await app.listen(3000, '0.0.0.0');
 }
 bootstrap();

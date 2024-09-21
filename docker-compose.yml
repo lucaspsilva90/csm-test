@@ -1,4 +1,4 @@
-version: '3.8'  # Adicione uma versão se não tiver
+version: '3.8'
 
 services:
   nest-app:
@@ -25,7 +25,6 @@ services:
     depends_on:
       - postgres
       - redis
-      # - mongodb
 
   postgres:
     image: postgres:15-alpine
@@ -38,6 +37,17 @@ services:
       - '5432:5432'
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      
+    mongodb:
+      image: mongo:6.0
+      container_name: mongodb
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: example
+      ports:
+        - '27017:27017'
+      volumes:
+        - mongo-data:/data/db
 
   redis:
     image: redis:7-alpine
@@ -45,26 +55,8 @@ services:
     ports:
       - '6379:6379'
 
-  jaeger:
-    image: jaegertracing/all-in-one:1.42
-    container_name: jaeger
-    ports:
-      - '5775:5775'
-      - '6831:6831/udp'
-      - '16686:16686' # Interface web do Jaeger
-      - '14268:14268' # Endpoint para receber traces
-
-  # mongodb:
-  #   image: mongo:6.0
-  #   container_name: mongodb
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: example
-  #   ports:
-  #     - '27017:27017'
-  #   volumes:
-  #     - mongo-data:/data/db
-
 volumes:
   postgres-data:
   mongo-data:
+
+
